@@ -4,6 +4,10 @@ Zero is an OS-agnostic chat application, primarily meant to be used on Android, 
 ## Resources
 - Dart language tour: [Dart](https://dart.dev/guides/language/language-tour)
 - Building beautiful UIs using Flutter: [Google Codelabs](https://codelabs.developers.google.com/codelabs/flutter)
+- What is Zero-Knowledge Encryption?: [Tresorit](https://tresorit.com/blog/zero-knowledge-encryption/)
+- How could a system be zero-knowledge? [StackOverflow](https://security.stackexchange.com/a/66324)
+- Secure way to hold private keys in the Android app? [StackOverflow](https://security.stackexchange.com/a/242398)
+- Flutter Welcome Screen With PageView: [Joseph Ajayi](https://medium.com/@adekoyeajayi/flutter-welcome-screen-with-pageview-624e20001bdb)
 
 ## Changelog
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
