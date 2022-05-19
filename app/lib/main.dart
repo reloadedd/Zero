@@ -29,7 +29,7 @@ class ZeroChatApp extends StatelessWidget {
         theme: defaultTargetPlatform == TargetPlatform.iOS
             ? kIOSTheme
             : kDefaultTheme,
-        home: WelcomeScreen());
+        home: const WelcomeScreen());
     // home: const ChatScreen());
   }
 }

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Change the look of individual chats
+- Add home screen, where you can view all the messages in a list format
+- Add intro pages, presenting the application to the user
+- Create a new folder called **app**, where the application will be stored.
+
 ## [0.1.0] - 2022-05-02
 ### Added
 - Add this changelog

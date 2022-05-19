@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zero/data/pages.dart';
 import 'package:zero/screens/chat.dart';
+import 'package:zero/screens/home.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -132,7 +133,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                            return const ChatScreen();
+                                            return const HomeScreen();
                                           }));
                                         },
                                         child: const Text("Let's begin!"))

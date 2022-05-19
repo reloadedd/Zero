@@ -63,6 +63,14 @@ flutter:
     - assets/images/security_page.png
     - assets/images/forgot_password_page.png
     - assets/images/ending_page.png
+    - assets/images/userImage1.jpeg
+    - assets/images/userImage2.jpeg
+    - assets/images/userImage3.jpeg
+    - assets/images/userImage4.jpeg
+    - assets/images/userImage5.jpeg
+    - assets/images/userImage6.jpeg
+    - assets/images/userImage7.jpeg
+    - assets/images/userImage8.jpeg
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
