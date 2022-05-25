@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Cryptography logic, available inside the `lib/crypto` package
+- Add login page, with the help of Amplify
+
+### Changed
+- App icon
 
 ## [0.2.0] - 2022-05-19
 ### Added
