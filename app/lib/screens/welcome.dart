@@ -128,7 +128,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           height: 1.3),
                                       textAlign: TextAlign.center,
                                     ),
-                                    ElevatedButton(
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 30),
+                                      child: ElevatedButton(
                                         onPressed: () {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
@@ -136,7 +138,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                             return const HomeScreen();
                                           }));
                                         },
-                                        child: const Text("Let's begin!"))
+                                        style: ButtonStyle(
+                                            padding:
+                                                MaterialStateProperty.all<EdgeInsets>(
+                                                    const EdgeInsets.all(16)),
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12))),
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.purple.shade700)),
+                                        child: const Text("Let's begin!"),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),

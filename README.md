@@ -1,6 +1,11 @@
 # Zero
 Zero is an OS-agnostic chat application, primarily meant to be used on Android, that stores the messages on cloud using zero-knowledge encryption for message storage.
 
+## Packages Used
+- bip39 (Bitcoin Improvement Proposal 39), [pub.dev](https://pub.dev/packages/bip39)
+- shared_preferences, [pub.dev](https://pub.dev/packages/shared_preferences)
+- AWS Amplify libraries, [Amplify Docs](https://docs.amplify.aws/lib/q/platform/flutter/)
+
 ## Resources
 - Dart language tour. [Dart](https://dart.dev/guides/language/language-tour)
 - Building beautiful UIs using Flutter. [Google Codelabs](https://codelabs.developers.google.com/codelabs/flutter)
@@ -9,6 +14,8 @@ Zero is an OS-agnostic chat application, primarily meant to be used on Android, 
 - Secure way to hold private keys in the Android app? [StackOverflow](https://security.stackexchange.com/a/242398)
 - Flutter Welcome Screen With PageView. [Joseph Ajayi](https://medium.com/@adekoyeajayi/flutter-welcome-screen-with-pageview-624e20001bdb)
 - How to Build a Chat App UI With Flutter and Dart. [freeCodeCamp](https://www.freecodecamp.org/news/build-a-chat-app-ui-with-flutter/)
+- Learning how to use AWS Amplify in Flutter. [LogRocket Blog](https://blog.logrocket.com/learning-aws-amplify-flutter/)
+- How to generate safe RSA keys deterministically using a seed? [StackOverflow](https://stackoverflow.com/a/72047475)
 
 ## Changelog
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
