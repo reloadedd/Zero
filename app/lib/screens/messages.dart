@@ -28,8 +28,8 @@ class MessagesPage extends StatefulWidget {
 class _MessagesPageState extends State<MessagesPage> {
   @override
   void initState() {
-    createNewUserFirstTime();
     super.initState();
+    createNewUserFirstTime();
   }
 
   Future<List<User>> getChats() async {

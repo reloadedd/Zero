@@ -9,7 +9,10 @@
 <p align="center">Zero is an OS-agnostic chat application, primarily meant to be used on Android, that stores the messages on cloud using zero-knowledge encryption for message storage.</p>
 
 ---
-## Setup Amplify
+## Architecture
+![Zero Protocol](protocol/architecture.png)
+
+## Configure AWS Amplify
 ```shell
 $ amplify configure
 $ amplify init

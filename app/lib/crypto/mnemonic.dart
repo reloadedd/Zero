@@ -11,6 +11,12 @@ abstract class BaseMnemonic {
 class Mnemonic implements BaseMnemonic {
   late final String mnemonic;
 
+  Mnemonic([String? input]) {
+    if (input != null) {
+      this.mnemonic = input;
+    }
+  }
+
   @override
   String generateMnemonic() {
     this.mnemonic = bip39.generateMnemonic(strength: G_ENTROPY_BYTES_LENGTH);

@@ -1,11 +1,18 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:zero/constants.dart';
+import 'package:zero/crypto/mnemonic.dart';
 import 'package:zero/models/Message.dart';
 import 'package:animations/animations.dart';
 import 'package:zero/helpers.dart';
 import 'package:zero/models/ModelProvider.dart';
+import 'package:zero/crypto/rsa.dart' as rsa;
+import 'package:zero/crypto/salsa.dart';
+import 'package:encrypt/encrypt.dart';
 import 'package:zero/models/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
   String username;
@@ -25,6 +32,9 @@ class _ChatScreenState extends State<ChatScreen> {
   String senderUsername = '';
   String receiverID = '';
   String receiverUsername = '';
+  late RSAPublicKey publicKey;
+  late RSAPrivateKey privateKey;
+  rsa.RSA pki = new rsa.RSA();
 
   Future<void> _initialSetup() async {
     Amplify.Auth.getCurrentUser().then((value) {
@@ -42,6 +52,23 @@ class _ChatScreenState extends State<ChatScreen> {
       Amplify.DataStore.save(new Chat(
           userID: senderID, from: senderUsername, to: receiverUsername));
     }
+  }
+
+  Future<void> _cryptoSetup() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final seedPhase = prefs.getString(G_SEED_PHASE);
+    Mnemonic mnemonic = Mnemonic(seedPhase);
+
+    final pair = pki.generateRSAkeyPair(mnemonic);
+    publicKey = pair.publicKey;
+    privateKey = pair.privateKey;
+
+    final key = IV.fromSecureRandom(G_SALSA20_KEY_LENGTH);
+    final iv = IV.fromSecureRandom(G_SALSA20_IV_LENGTH);
+    final encryptedSalsaKey =
+        pki.encrypt(publicKey, convertStringToUint8List(key.base64));
+    final encryptedSalsaIV =
+        pki.encrypt(publicKey, convertStringToUint8List(iv.base64));
   }
 
   @override
