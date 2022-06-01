@@ -9,6 +9,15 @@
 <p align="center">Zero is an OS-agnostic chat application, primarily meant to be used on Android, that stores the messages on cloud using zero-knowledge encryption for message storage.</p>
 
 ---
+## Setup Amplify
+```shell
+$ amplify configure
+$ amplify init
+$ amplify pull --sandboxId bdd74b4a-dd9c-45c8-9ff4-5d4b26e5afef
+$ amplify add auth
+$ amplify add storage
+```
+
 ## Packages Used
 - bip39 (Bitcoin Improvement Proposal 39), [pub.dev](https://pub.dev/packages/bip39)
 - shared_preferences, [pub.dev](https://pub.dev/packages/shared_preferences)

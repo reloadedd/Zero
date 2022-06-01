@@ -20,11 +20,6 @@ void main() async {
   runApp(const ZeroChatApp());
 }
 
-final ThemeData kDefaultTheme = ThemeData(
-  colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
-      .copyWith(secondary: Colors.orangeAccent[400]),
-);
-
 class ZeroChatApp extends StatefulWidget {
   const ZeroChatApp({
     Key? key,
@@ -44,3 +39,8 @@ class _ZeroChatAppState extends State<ZeroChatApp> {
             title: 'Zero', themeMode: ThemeMode.light, home: HomeScreen());
   }
 }
+
+final ThemeData kDefaultTheme = ThemeData(
+  colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple)
+      .copyWith(secondary: Colors.orangeAccent[400]),
+);

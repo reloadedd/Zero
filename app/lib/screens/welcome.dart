@@ -132,7 +132,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       margin: const EdgeInsets.only(top: 30),
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          Navigator.of(context).push(
+                                          Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                                   builder: (context) {
                                             return const HomeScreen();
@@ -150,7 +150,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                                             12))),
                                             backgroundColor:
                                                 MaterialStateProperty.all(
-                                                    Colors.purple.shade700)),
+                                                    Colors.red.withAlpha(130))),
                                         child: const Text("Let's begin!"),
                                       ),
                                     )

@@ -37,6 +37,7 @@ dependencies:
   bip39: ^1.0.6
   encrypt: ^5.0.1
   pointycastle: ^3.6.0
+  animations: ^2.0.3
 
   # AWS Amplify Packages
   amplify_flutter: ^0.5.0
@@ -69,19 +70,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/welcome_page.png
-    - assets/images/chat_page.png
-    - assets/images/security_page.png
-    - assets/images/forgot_password_page.png
-    - assets/images/ending_page.png
-    - assets/images/userImage1.jpeg
-    - assets/images/userImage2.jpeg
-    - assets/images/userImage3.jpeg
-    - assets/images/userImage4.jpeg
-    - assets/images/userImage5.jpeg
-    - assets/images/userImage6.jpeg
-    - assets/images/userImage7.jpeg
-    - assets/images/userImage8.jpeg
+    - assets/images/
+    - assets/icon/
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

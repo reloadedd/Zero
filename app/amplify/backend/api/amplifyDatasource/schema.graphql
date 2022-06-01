@@ -1,0 +1,24 @@
+type Chat @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  from: String
+  to: String
+  userID: ID! @index(name: "byUser")
+}
+
+type Message @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  content: String
+  seenByReceiver: Boolean
+  receiverID: String!
+  senderID: ID! @index(name: "byUser")
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  username: String!
+  profilePictureUrl: String
+  status: String
+  createdOn: AWSDateTime
+  chats: [Chat] @hasMany(indexName: "byUser", fields: ["id"])
+  Messages: [Message] @hasMany(indexName: "byUser", fields: ["id"])
+}

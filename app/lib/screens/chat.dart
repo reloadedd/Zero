@@ -1,175 +1,17 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:zero/models/message.dart';
-
-// String _name = 'reloadedd';
-
-// class ChatScreen extends StatefulWidget {
-//   const ChatScreen({Key? key}) : super(key: key);
-
-//   @override
-//   State<ChatScreen> createState() => _ChatScreenState();
-// }
-
-// class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
-//   final _textController = TextEditingController();
-//   final List<ChatMessage> _messages = [];
-//   final FocusNode _focusNode = FocusNode();
-//   bool _isComposing = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(
-//           title: Text('Zero'),
-//           elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0 : 4,
-//         ),
-//         body: Container(
-//           child: Column(
-//             children: [
-//               Flexible(
-//                   child: ListView.builder(
-//                 itemBuilder: (_, index) => _messages[index],
-//                 padding: const EdgeInsets.all(8),
-//                 reverse: true,
-//                 itemCount: _messages.length,
-//               )),
-//               const Divider(height: 1),
-//               Container(
-//                 decoration: BoxDecoration(color: Theme.of(context).cardColor),
-//                 child: _buildTextComposer(),
-//               )
-//             ],
-//           ),
-//           decoration: Theme.of(context).platform == TargetPlatform.iOS
-//               ? BoxDecoration(
-//                   border: Border(top: BorderSide(color: Colors.grey[200]!)))
-//               : null,
-//         ));
-//   }
-
-//   void _handleSubmitted(String text) {
-//     _textController.clear();
-//     setState(() {
-//       _isComposing = false;
-//     });
-
-//     ChatMessage message = ChatMessage(
-//       text: text,
-//       animationController: AnimationController(
-//         duration: const Duration(milliseconds: 700),
-//         vsync: this,
-//       ),
-//     );
-
-//     setState(() {
-//       _messages.insert(0, message);
-//     });
-//     _focusNode.requestFocus();
-//     message.animationController.forward();
-//   }
-
-//   Widget _buildTextComposer() {
-//     return IconTheme(
-//       data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
-//       child: Container(
-//         margin: const EdgeInsets.symmetric(horizontal: 8.0),
-//         child: Row(
-//           children: [
-//             Flexible(
-//                 child: TextField(
-//               controller: _textController,
-//               onSubmitted: _isComposing ? _handleSubmitted : null,
-//               onChanged: (text) {
-//                 setState(() {
-//                   _isComposing = text.isNotEmpty;
-//                 });
-//               },
-//               decoration:
-//                   const InputDecoration.collapsed(hintText: 'Send a message'),
-//               focusNode: _focusNode,
-//             )),
-//             Container(
-//                 margin: const EdgeInsets.symmetric(horizontal: 4.0),
-//                 child: Theme.of(context).platform == TargetPlatform.iOS
-//                     ? CupertinoButton(
-//                         child: const Text('Send'),
-//                         onPressed: _isComposing
-//                             ? () => _handleSubmitted(_textController.text)
-//                             : null)
-//                     : IconButton(
-//                         icon: const Icon(Icons.send),
-//                         onPressed: _isComposing
-//                             ? () => _handleSubmitted(_textController.text)
-//                             : null,
-//                       ))
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   @override
-//   void dispose() {
-//     for (var message in _messages) {
-//       message.animationController.dispose();
-//     }
-//     super.dispose();
-//   }
-// }
-
-// class ChatMessage extends StatelessWidget {
-//   const ChatMessage(
-//       {required this.text, required this.animationController, Key? key})
-//       : super(key: key);
-//   final String text;
-//   final AnimationController animationController;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizeTransition(
-//       sizeFactor: CurvedAnimation(
-//         parent: animationController,
-//         curve: Curves.elasticOut,
-//       ),
-//       axisAlignment: 0,
-//       child: Container(
-//         margin: const EdgeInsets.symmetric(vertical: 10),
-//         child: Row(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Container(
-//               margin: const EdgeInsets.only(right: 16),
-//               child: CircleAvatar(child: Text(_name[0])),
-//             ),
-//             Expanded(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text(
-//                     _name,
-//                     style: Theme.of(context).textTheme.headline4,
-//                   ),
-//                   Container(
-//                     margin: const EdgeInsets.only(top: 5.0),
-//                     child: Text(text),
-//                   )
-//                 ],
-//               ),
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:zero/models/Message.dart';
+import 'package:animations/animations.dart';
+import 'package:zero/helpers.dart';
+import 'package:zero/models/ModelProvider.dart';
+import 'package:zero/models/User.dart';
 
 class ChatScreen extends StatefulWidget {
-  String name;
+  String username;
   String imageUrl;
 
-  ChatScreen({Key? key, required this.name, required this.imageUrl})
+  ChatScreen({Key? key, required this.username, required this.imageUrl})
       : super(key: key);
 
   @override
@@ -177,12 +19,62 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<MessageModel> messages = [
-    MessageModel(content: "Hi there", type: "receiver"),
-    MessageModel(content: "Hello", type: "sender"),
-    MessageModel(content: "Do you have a spare bitcoin?", type: "receiver"),
-    MessageModel(content: "Nah man, just ran out of 'em...", type: "sender"),
-  ];
+  TextEditingController _textController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  String senderID = '';
+  String senderUsername = '';
+  String receiverID = '';
+  String receiverUsername = '';
+
+  Future<void> _initialSetup() async {
+    Amplify.Auth.getCurrentUser().then((value) {
+      senderID = value.userId;
+      senderUsername = value.username;
+    });
+    final result = await Amplify.DataStore.query(User.classType,
+        where: User.USERNAME.eq(widget.username));
+    receiverID = result[0].id;
+    receiverUsername = result[0].username;
+
+    final chats = await Amplify.DataStore.query(Chat.classType,
+        where: Chat.FROM.eq(senderUsername).and(Chat.TO.eq(receiverUsername)));
+    if (chats.isEmpty) {
+      Amplify.DataStore.save(new Chat(
+          userID: senderID, from: senderUsername, to: receiverUsername));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialSetup();
+  }
+
+  void _handleSubmitted(String text) async {
+    _textController.clear();
+
+    setState(() {
+      Amplify.DataStore.save(new Message(
+          content: text,
+          senderID: senderID,
+          receiverID: receiverID,
+          seenByReceiver: false));
+    });
+
+    _focusNode.requestFocus();
+  }
+
+  Future<List<Message>> getMessages() async {
+    if (senderID == '' || receiverID == '') {
+      await _initialSetup();
+    }
+    final messages = await Amplify.DataStore.query(Message.classType,
+        where: Message.SENDERID
+            .eq(senderID)
+            .and(Message.RECEIVERID.eq(receiverID)));
+
+    return messages;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +108,7 @@ class _ChatScreenState extends State<ChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(widget.name,
+                Text(widget.username,
                     style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
@@ -226,45 +118,55 @@ class _ChatScreenState extends State<ChatScreen> {
                 )
               ],
             )),
-            const Icon(
-              Icons.settings,
-              color: Colors.black45,
-            )
           ]),
         )),
       ),
       body: Stack(
         children: <Widget>[
-          ListView.builder(
-            itemCount: messages.length,
-            shrinkWrap: true,
-            padding: const EdgeInsets.only(top: 10, bottom: 70),
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Container(
-                padding: const EdgeInsets.only(
-                    left: 14, right: 14, top: 10, bottom: 10),
-                child: Align(
-                  alignment: (messages[index].type == "receiver"
-                      ? Alignment.topLeft
-                      : Alignment.topRight),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: (messages[index].type == "receiver"
-                          ? Colors.grey.shade200
-                          : Colors.blue[200]),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      messages[index].content,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+          FutureBuilder<List<Message>>(
+              future: getMessages(),
+              builder: (context, future) {
+                if (!future.hasData || future.data!.isEmpty) {
+                  return Center(
+                      heightFactor: 30,
+                      child: Text('Just make the first step:)',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w200)));
+                } else {
+                  final messages = future.data;
+
+                  return ListView.builder(
+                    itemCount: messages!.length,
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(top: 10, bottom: 70),
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.only(
+                            left: 14, right: 14, top: 10, bottom: 10),
+                        child: Align(
+                          alignment: (messages[index].receiverID == senderID
+                              ? Alignment.topLeft
+                              : Alignment.topRight),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: (messages[index].receiverID == senderID
+                                  ? Colors.grey.shade200
+                                  : Colors.blue[200]),
+                            ),
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              messages[index].content ?? '',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              }),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
@@ -286,8 +188,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 const SizedBox(width: 15),
-                const Expanded(
+                Expanded(
                     child: TextField(
+                  controller: _textController,
+                  focusNode: _focusNode,
+                  onSubmitted: _handleSubmitted,
                   decoration: InputDecoration(
                       hintText: "Write message...",
                       hintStyle: TextStyle(color: Colors.black45),

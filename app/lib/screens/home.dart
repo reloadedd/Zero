@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-import 'messages.dart';
+import 'package:zero/screens/seed_phrase_generation.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:zero/amplifyconfiguration.dart';
+import 'messages.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
+import 'package:zero/models/ModelProvider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zero/constants.dart';
+
+bool? APP_OPENED_FIRST_TIME;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,21 +20,37 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _amplifyConfigured = false;
+
+  void _initialSetup() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final appOpenedFirstTime = prefs.getBool(G_APP_OPENEND_FIRST_TIME);
+    APP_OPENED_FIRST_TIME = appOpenedFirstTime;
+  }
+
   @override
   void initState() {
     super.initState();
     if (!Amplify.isConfigured) {
       _configureAmplify();
     }
+    _initialSetup();
   }
 
   void _configureAmplify() async {
+    // await Amplify.addPlugin(AmplifyAPI()); // UNCOMMENT this line after backend is deployed
+    await Amplify.addPlugin(
+        AmplifyDataStore(modelProvider: ModelProvider.instance));
+    await Amplify.addPlugin(AmplifyAuthCognito());
+
+    // Once Plugins are added, configure Amplify
+    await Amplify.configure(amplifyconfig);
     try {
-      await Amplify.addPlugin(AmplifyAuthCognito());
-      await Amplify.configure(amplifyconfig);
-      print('Successfully configured');
-    } on Exception catch (e) {
-      print('Error configuring Amplify: $e');
+      setState(() {
+        _amplifyConfigured = true;
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -40,20 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
         themeMode: ThemeMode.light,
         builder: Authenticator.builder(),
         home: Scaffold(
-          body: const MessagesPage(),
-          bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Colors.red,
-            unselectedItemColor: Colors.grey.shade400,
-            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
-            unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
-            type: BottomNavigationBarType.fixed,
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.message), label: "Messages"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle_outlined), label: "Profile")
-            ],
-          ),
+          body: APP_OPENED_FIRST_TIME == true
+              ? const SeedPhraseGenerationScreen()
+              : const MessagesPage(),
         ),
       ),
     );
@@ -65,10 +77,10 @@ ThemeData customLightTheme = ThemeData(
   // app's colors scheme and brightness
   colorScheme: ColorScheme.fromSwatch(
     brightness: Brightness.light,
-    primarySwatch: Colors.indigo,
+    primarySwatch: Colors.red,
   ),
   // tab bar indicator color
-  indicatorColor: Colors.indigo,
+  indicatorColor: Colors.red,
   textTheme: const TextTheme(
     // text theme of the header on each step
     headline6: TextStyle(
@@ -95,6 +107,6 @@ ThemeData customLightTheme = ThemeData(
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        backgroundColor: MaterialStateProperty.all(Colors.purple.shade700)),
+        backgroundColor: MaterialStateProperty.all(Colors.red.shade400)),
   ),
 );
