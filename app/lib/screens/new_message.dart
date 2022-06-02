@@ -100,7 +100,8 @@ class _NewMessageScreenState extends State<NewMessageScreen> {
                             'Start a new conversation with ${users[index].username}',
                         profilePictureUrl: users[index].profilePictureUrl ??
                             G_DEFAULT_PROFILE_PICTURE,
-                        createdOn: users[index].createdOn.toString(),
+                        // createdOn: users[index].createdOn,
+                        createdOn: 'Now',
                         isMessageRead:
                             (index == 0 || index == 3) ? true : false,
                       );

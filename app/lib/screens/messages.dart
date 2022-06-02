@@ -12,7 +12,7 @@ Future<void> createNewUserFirstTime() async {
   final isAlreadyAdded = await Amplify.DataStore.query(User.classType,
       where: User.USERNAME.eq(current_user.username));
 
-  if (isAlreadyAdded.isNotEmpty) {
+  if (isAlreadyAdded.isEmpty) {
     Amplify.DataStore.save(
         new User(username: current_user.username, id: current_user.userId));
   }
@@ -33,18 +33,22 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   Future<List<User>> getChats() async {
+    print('Called me');
     final current_user = await Amplify.Auth.getCurrentUser();
+    print('current_user: $current_user');
     final chats = await Amplify.DataStore.query(Chat.classType,
-        where: Chat.FROM.eq(current_user));
+        where: Chat.SENDERUSERNAME.eq(current_user));
+    print('chats: $chats');
 
     List<User> chattedWith = <User>[];
     for (var chat in chats) {
       final user = await Amplify.DataStore.query(User.classType,
-          where: User.USERNAME.eq(chat.to));
+          where: User.USERNAME.eq(chat.receiverUsername));
 
       chattedWith.add(user[0]);
     }
 
+    print('chattedWith: $chattedWith');
     return chattedWith;
   }
 
@@ -154,7 +158,8 @@ class _MessagesPageState extends State<MessagesPage> {
                                 'Start a new conversation with ${users[index].username}',
                             profilePictureUrl: users[index].profilePictureUrl ??
                                 G_DEFAULT_PROFILE_PICTURE,
-                            createdOn: users[index].createdOn.toString(),
+                            // createdOn: users[index].createdOn.toString(),
+                            createdOn: 'Now',
                             isMessageRead:
                                 (index == 0 || index == 3) ? true : false,
                           );

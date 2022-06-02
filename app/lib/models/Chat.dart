@@ -28,9 +28,11 @@ import 'package:flutter/foundation.dart';
 class Chat extends Model {
   static const classType = const _ChatModelType();
   final String id;
-  final String? _from;
-  final String? _to;
+  final String? _senderUsername;
+  final String? _receiverUsername;
   final String? _userID;
+  final String? _key;
+  final String? _iv;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -42,12 +44,12 @@ class Chat extends Model {
     return id;
   }
   
-  String? get from {
-    return _from;
+  String? get senderUsername {
+    return _senderUsername;
   }
   
-  String? get to {
-    return _to;
+  String? get receiverUsername {
+    return _receiverUsername;
   }
   
   String get userID {
@@ -63,6 +65,14 @@ class Chat extends Model {
     }
   }
   
+  String? get key {
+    return _key;
+  }
+  
+  String? get iv {
+    return _iv;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -71,14 +81,16 @@ class Chat extends Model {
     return _updatedAt;
   }
   
-  const Chat._internal({required this.id, from, to, required userID, createdAt, updatedAt}): _from = from, _to = to, _userID = userID, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Chat._internal({required this.id, senderUsername, receiverUsername, required userID, key, iv, createdAt, updatedAt}): _senderUsername = senderUsername, _receiverUsername = receiverUsername, _userID = userID, _key = key, _iv = iv, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Chat({String? id, String? from, String? to, required String userID}) {
+  factory Chat({String? id, String? senderUsername, String? receiverUsername, required String userID, String? key, String? iv}) {
     return Chat._internal(
       id: id == null ? UUID.getUUID() : id,
-      from: from,
-      to: to,
-      userID: userID);
+      senderUsername: senderUsername,
+      receiverUsername: receiverUsername,
+      userID: userID,
+      key: key,
+      iv: iv);
   }
   
   bool equals(Object other) {
@@ -90,9 +102,11 @@ class Chat extends Model {
     if (identical(other, this)) return true;
     return other is Chat &&
       id == other.id &&
-      _from == other._from &&
-      _to == other._to &&
-      _userID == other._userID;
+      _senderUsername == other._senderUsername &&
+      _receiverUsername == other._receiverUsername &&
+      _userID == other._userID &&
+      _key == other._key &&
+      _iv == other._iv;
   }
   
   @override
@@ -104,9 +118,11 @@ class Chat extends Model {
     
     buffer.write("Chat {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("from=" + "$_from" + ", ");
-    buffer.write("to=" + "$_to" + ", ");
+    buffer.write("senderUsername=" + "$_senderUsername" + ", ");
+    buffer.write("receiverUsername=" + "$_receiverUsername" + ", ");
     buffer.write("userID=" + "$_userID" + ", ");
+    buffer.write("key=" + "$_key" + ", ");
+    buffer.write("iv=" + "$_iv" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -114,30 +130,36 @@ class Chat extends Model {
     return buffer.toString();
   }
   
-  Chat copyWith({String? id, String? from, String? to, String? userID}) {
+  Chat copyWith({String? id, String? senderUsername, String? receiverUsername, String? userID, String? key, String? iv}) {
     return Chat._internal(
       id: id ?? this.id,
-      from: from ?? this.from,
-      to: to ?? this.to,
-      userID: userID ?? this.userID);
+      senderUsername: senderUsername ?? this.senderUsername,
+      receiverUsername: receiverUsername ?? this.receiverUsername,
+      userID: userID ?? this.userID,
+      key: key ?? this.key,
+      iv: iv ?? this.iv);
   }
   
   Chat.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _from = json['from'],
-      _to = json['to'],
+      _senderUsername = json['senderUsername'],
+      _receiverUsername = json['receiverUsername'],
       _userID = json['userID'],
+      _key = json['key'],
+      _iv = json['iv'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'from': _from, 'to': _to, 'userID': _userID, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'senderUsername': _senderUsername, 'receiverUsername': _receiverUsername, 'userID': _userID, 'key': _key, 'iv': _iv, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "chat.id");
-  static final QueryField FROM = QueryField(fieldName: "from");
-  static final QueryField TO = QueryField(fieldName: "to");
+  static final QueryField SENDERUSERNAME = QueryField(fieldName: "senderUsername");
+  static final QueryField RECEIVERUSERNAME = QueryField(fieldName: "receiverUsername");
   static final QueryField USERID = QueryField(fieldName: "userID");
+  static final QueryField KEY = QueryField(fieldName: "key");
+  static final QueryField IV = QueryField(fieldName: "iv");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Chat";
     modelSchemaDefinition.pluralName = "Chats";
@@ -156,13 +178,13 @@ class Chat extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Chat.FROM,
+      key: Chat.SENDERUSERNAME,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Chat.TO,
+      key: Chat.RECEIVERUSERNAME,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -170,6 +192,18 @@ class Chat extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Chat.USERID,
       isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Chat.KEY,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Chat.IV,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     

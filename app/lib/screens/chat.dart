@@ -10,7 +10,7 @@ import 'package:zero/helpers.dart';
 import 'package:zero/models/ModelProvider.dart';
 import 'package:zero/crypto/rsa.dart' as rsa;
 import 'package:zero/crypto/salsa.dart';
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:zero/models/User.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,10 +47,15 @@ class _ChatScreenState extends State<ChatScreen> {
     receiverUsername = result[0].username;
 
     final chats = await Amplify.DataStore.query(Chat.classType,
-        where: Chat.FROM.eq(senderUsername).and(Chat.TO.eq(receiverUsername)));
+        where: Chat.SENDERUSERNAME
+            .eq(senderUsername)
+            .and(Chat.RECEIVERUSERNAME.eq(receiverUsername)));
+    print('chats = $chats');
     if (chats.isEmpty) {
       Amplify.DataStore.save(new Chat(
-          userID: senderID, from: senderUsername, to: receiverUsername));
+          userID: senderID,
+          senderUsername: senderUsername,
+          receiverUsername: receiverUsername));
     }
   }
 
@@ -63,8 +68,8 @@ class _ChatScreenState extends State<ChatScreen> {
     publicKey = pair.publicKey;
     privateKey = pair.privateKey;
 
-    final key = IV.fromSecureRandom(G_SALSA20_KEY_LENGTH);
-    final iv = IV.fromSecureRandom(G_SALSA20_IV_LENGTH);
+    final key = encrypt.IV.fromSecureRandom(G_SALSA20_KEY_LENGTH);
+    final iv = encrypt.IV.fromSecureRandom(G_SALSA20_IV_LENGTH);
     final encryptedSalsaKey =
         pki.encrypt(publicKey, convertStringToUint8List(key.base64));
     final encryptedSalsaIV =
@@ -95,12 +100,19 @@ class _ChatScreenState extends State<ChatScreen> {
     if (senderID == '' || receiverID == '') {
       await _initialSetup();
     }
-    final messages = await Amplify.DataStore.query(Message.classType,
+    final outgoing = await Amplify.DataStore.query(Message.classType,
         where: Message.SENDERID
             .eq(senderID)
             .and(Message.RECEIVERID.eq(receiverID)));
+    final incoming = await Amplify.DataStore.query(Message.classType,
+        where: Message.SENDERID
+            .eq(receiverID)
+            .and(Message.RECEIVERID.eq(senderID)));
 
-    return messages;
+    outgoing.addAll(incoming);
+    // print('Mesages: $outgoing');
+
+    return outgoing;
   }
 
   @override
@@ -227,7 +239,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 )),
                 const SizedBox(width: 15),
                 FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () => _handleSubmitted(_textController.text),
                   child: const Icon(Icons.send_outlined,
                       color: Colors.white, size: 20),
                   backgroundColor: Colors.lightBlue,

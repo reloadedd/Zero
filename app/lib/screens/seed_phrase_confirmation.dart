@@ -87,7 +87,7 @@ class _SeedPhraseConfirmationScreenState
       });
     }
 
-    if (_currentWordIndex == 2) {
+    if (_currentWordIndex == 5) {
       setState(() {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return SeedPhraseSuccessScreen();

@@ -9,6 +9,7 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:zero/models/ModelProvider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zero/constants.dart';
+import 'package:amplify_api/amplify_api.dart';
 
 bool? APP_OPENED_FIRST_TIME;
 
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await Amplify.addPlugin(
         AmplifyDataStore(modelProvider: ModelProvider.instance));
     await Amplify.addPlugin(AmplifyAuthCognito());
+    await Amplify.addPlugin(AmplifyAPI());
 
     // Once Plugins are added, configure Amplify
     await Amplify.configure(amplifyconfig);
