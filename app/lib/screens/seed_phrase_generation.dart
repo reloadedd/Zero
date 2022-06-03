@@ -62,8 +62,6 @@ class _SeedPhraseGenerationScreenState
 
   @override
   Widget build(BuildContext context) {
-    print('hereeeeeeeeeeeeeee - seed');
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
