@@ -16,7 +16,7 @@
 ```shell
 $ amplify configure
 $ amplify init
-$ amplify pull --sandboxId bdd74b4a-dd9c-45c8-9ff4-5d4b26e5afef
+$ amplify pull --sandboxId <SANDBOX ID>
 $ amplify add auth
 $ amplify add storage
 ```
